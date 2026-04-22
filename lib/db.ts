@@ -140,6 +140,14 @@ export const db = {
       `) as UserRow[];
       return rows[0] ?? null;
     },
+    async debitCredits(id: string, cents: number): Promise<UserRow | null> {
+      const rows = (await sql`
+        UPDATE users SET credits_cents = credits_cents - ${cents}
+        WHERE id = ${id}
+        RETURNING ${sql.unsafe(USER_SELECT)}
+      `) as UserRow[];
+      return rows[0] ?? null;
+    },
     async byStripeCustomer(customerId: string): Promise<UserRow | null> {
       const rows = (await sql`
         SELECT ${sql.unsafe(USER_SELECT)} FROM users WHERE stripe_customer_id = ${customerId} LIMIT 1
@@ -163,6 +171,15 @@ export const db = {
     async delete(id: string): Promise<boolean> {
       const rows = (await sql`DELETE FROM devices WHERE id = ${id} RETURNING id`) as Array<{ id: string }>;
       return rows.length > 0;
+    },
+    async findByTokenHash(hash: string): Promise<DeviceRow | null> {
+      const rows = (await sql`
+        SELECT ${sql.unsafe(DEVICE_SELECT)} FROM devices WHERE device_token_hash = ${hash} LIMIT 1
+      `) as DeviceRow[];
+      return rows[0] ?? null;
+    },
+    async touch(id: string): Promise<void> {
+      await sql`UPDATE devices SET last_seen_at = now() WHERE id = ${id}`;
     },
   },
   pairingCodes: {
