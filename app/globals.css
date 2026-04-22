@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+@theme {
+  /* Defaults — light */
+  --color-paper: #F7F7FB;
+  --color-paper-soft: #EEEEF5;
+  --color-card: #FFFFFF;
+  --color-card-tint: #F3F3FA;
+
+  --color-ink: #07091A;
+  --color-ink-soft: #1C1F33;
+  --color-muted: #6B6E82;
+  --color-line: #E2E2EC;
+  --color-line-strong: #D0D0DC;
+
+  --color-ember: #6366F1;
+  --color-ember-soft: #818CF8;
+  --color-gold: #F59E0B;
+  --color-gold-soft: #FBBF24;
+  --color-link: #6366F1;
+  --color-mint: #10B981;
+  --color-lemon: #F59E0B;
+
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Dark overrides — applied whenever html.dark is set */
+html.dark {
+  --color-paper: #07091A;
+  --color-paper-soft: #0E1230;
+  --color-card: #111638;
+  --color-card-tint: #151A3F;
+
+  --color-ink: #F2F3F9;
+  --color-ink-soft: #C8CCDD;
+  --color-muted: #7E84A0;
+  --color-line: #242A4C;
+  --color-line-strong: #343A62;
+
+  --color-link: #8B92FF;
+  color-scheme: dark;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-ember) 35%, transparent);
+  color: var(--color-ink);
+}
+
+:where(a, button, [role="button"]):focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Dotted background — adapts per theme */
+.paper-dots {
+  background-image: radial-gradient(circle at 1px 1px, rgba(7, 9, 26, 0.09) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+html.dark .paper-dots {
+  background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.055) 1px, transparent 0);
+}
+
+/* Shadows — distinct for each theme */
+.card-shadow {
+  box-shadow:
+    0 1px 2px rgba(7, 9, 26, 0.04),
+    0 8px 24px -8px rgba(7, 9, 26, 0.10);
+}
+html.dark .card-shadow {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02),
+    0 1px 2px rgba(0, 0, 0, 0.4),
+    0 12px 28px -10px rgba(0, 0, 0, 0.55);
+}
+
+.card-shadow-strong {
+  box-shadow:
+    0 1px 2px rgba(7, 9, 26, 0.06),
+    0 20px 48px -16px rgba(7, 9, 26, 0.20);
+}
+html.dark .card-shadow-strong {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 2px 4px rgba(0, 0, 0, 0.5),
+    0 28px 60px -18px rgba(0, 0, 0, 0.7);
+}
+
+.inline-link {
+  color: var(--color-link);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+}
+
+/* Avoid theme-swap flashing on color changes */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
