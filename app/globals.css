@@ -123,6 +123,21 @@ html.theme-transition *::after {
   transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease !important;
 }
 
+/* Hide Clerk "Secured by Clerk" badge + "Development mode" banner.
+   The dev-mode pill only disappears for real once we ship pk_live_* keys,
+   but this keeps the auth card clean in preview/prod alike. */
+.cl-internal-b3fm6y,
+.cl-internal-1sxgbkm,
+.cl-internal-1rpdi70,
+.cl-badge,
+.cl-footer,
+.cl-logoBox,
+[data-clerk-branding],
+a[href*="clerk.com"],
+.cl-card > :last-child:has(> a[href*="clerk.com"]) {
+  display: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
