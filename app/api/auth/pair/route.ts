@@ -28,19 +28,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "invalid_code_format" }, { status: 400 });
   }
 
-  const row = db.pairingCodes.get(code);
+  const row = await db.pairingCodes.get(code);
   if (!row) return NextResponse.json({ error: "code_not_found" }, { status: 404 });
   if (row.consumedAt) return NextResponse.json({ error: "code_already_used" }, { status: 409 });
   if (new Date(row.expiresAt).getTime() < Date.now()) {
     return NextResponse.json({ error: "code_expired" }, { status: 410 });
   }
 
-  const user = db.users.get(row.userId);
+  const user = await db.users.get(row.userId);
   if (!user) return NextResponse.json({ error: "user_missing" }, { status: 404 });
 
   const { plaintext: deviceToken, hash } = generateDeviceToken();
   const deviceId = `dev_${Date.now().toString(36)}`;
-  db.devices.insert({
+  await db.devices.insert({
     id: deviceId,
     userId: user.id,
     deviceTokenHash: hash,
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
     lastSeenAt: new Date().toISOString(),
     createdAt: new Date().toISOString(),
   });
-  db.pairingCodes.consume(code);
+  await db.pairingCodes.consume(code);
 
   return NextResponse.json({
     deviceToken,

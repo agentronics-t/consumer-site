@@ -30,7 +30,7 @@ export async function POST(req: Request) {
   if (event.type === "checkout.session.completed") {
     const s = event.data.object as Stripe.Checkout.Session;
     if (s.mode !== "payment") return NextResponse.json({ received: true });
-    if (db.topUps.hasProcessed(s.id)) return NextResponse.json({ received: true });
+    if (await db.topUps.hasProcessed(s.id)) return NextResponse.json({ received: true });
 
     const userId = (s.metadata?.clerk_user_id ?? s.client_reference_id) as string | undefined;
     const customerId = typeof s.customer === "string" ? s.customer : s.customer?.id ?? null;
@@ -38,15 +38,17 @@ export async function POST(req: Request) {
 
     if (!userId || !amountCents) return NextResponse.json({ received: true });
 
-    db.users.addCredits(userId, amountCents);
+    const inserted = await db.topUps.insert(userId, amountCents, s.id);
+    if (!inserted) return NextResponse.json({ received: true });
+
+    await db.users.addCredits(userId, amountCents);
     if (customerId) {
-      const u = db.users.get(userId);
+      const u = await db.users.get(userId);
       if (u && !u.stripeCustomerId) {
-        db.users.update(userId, { stripeCustomerId: customerId });
+        await db.users.update(userId, { stripeCustomerId: customerId });
       }
     }
-    db.topUps.insert(userId, amountCents, s.id);
-    db.topUps.markProcessed(s.id);
+    await db.topUps.markProcessed(s.id);
   }
 
   return NextResponse.json({ received: true });

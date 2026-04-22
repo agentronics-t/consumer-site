@@ -38,7 +38,7 @@ export async function POST(req: Request) {
       data.email_addresses?.[0]?.email_address ??
       "";
     if (data.id && primary) {
-      bootstrapUser({ id: data.id, email: primary });
+      await bootstrapUser({ id: data.id, email: primary });
     }
   }
 

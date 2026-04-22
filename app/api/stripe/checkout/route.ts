@@ -24,7 +24,7 @@ export async function POST(req: Request) {
 
   const me = await currentUser();
   const email = me?.emailAddresses?.[0]?.emailAddress ?? "";
-  const { user } = bootstrapUser({ id: userId, email });
+  const { user } = await bootstrapUser({ id: userId, email });
 
   let stripe;
   try {
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
       metadata: { clerk_user_id: user.id },
     });
     customerId = customer.id;
-    db.users.update(user.id, { stripeCustomerId: customerId });
+    await db.users.update(user.id, { stripeCustomerId: customerId });
   }
 
   const session = await stripe.checkout.sessions.create({

@@ -20,11 +20,13 @@ export default async function DashboardPage({
 
   const me = await currentUser();
   const email = me?.emailAddresses?.[0]?.emailAddress ?? "";
-  const { user, apiKeyPlaintext } = bootstrapUser({ id: userId, email });
+  const { user, apiKeyPlaintext } = await bootstrapUser({ id: userId, email });
 
   const since = rollingWindowStart(30);
-  const spentCents = db.usage.recentSpendCents(userId, since);
-  const taskCount = db.usage.count(userId, since);
+  const [spentCents, taskCount] = await Promise.all([
+    db.usage.recentSpendCents(userId, since),
+    db.usage.count(userId, since),
+  ]);
 
   const params = await searchParams;
   const topupSuccess = params.topup === "success";

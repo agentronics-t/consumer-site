@@ -13,10 +13,12 @@ export async function GET() {
 
   const me = await currentUser();
   const email = me?.emailAddresses?.[0]?.emailAddress ?? "";
-  const { user } = bootstrapUser({ id: userId, email });
+  const { user } = await bootstrapUser({ id: userId, email });
   const since = rollingWindowStart(30);
-  const spentCents = db.usage.recentSpendCents(userId, since);
-  const taskCount = db.usage.count(userId, since);
+  const [spentCents, taskCount] = await Promise.all([
+    db.usage.recentSpendCents(userId, since),
+    db.usage.count(userId, since),
+  ]);
 
   return NextResponse.json({
     id: user.id,

@@ -1,6 +1,10 @@
-/**
- * MVP in-memory store. Swap for Postgres (Supabase/Neon) before going live.
- */
+import { neon } from "@neondatabase/serverless";
+
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL is not set");
+}
+
+const sql = neon(process.env.DATABASE_URL);
 
 export type ModelId = "claude" | "gpt" | "gemini";
 
@@ -47,126 +51,201 @@ export type TopUpRow = {
   createdAt: string;
 };
 
-type Store = {
-  users: Map<string, UserRow>;
-  devices: Map<string, DeviceRow>;
-  pairingCodes: Map<string, PairingCodeRow>;
-  usage: UsageEventRow[];
-  topUps: TopUpRow[];
-  usageSeq: number;
-  topUpSeq: number;
-  processedSessions: Set<string>;
-};
+const USER_SELECT = `
+  id,
+  email,
+  stripe_customer_id AS "stripeCustomerId",
+  api_key_hash AS "apiKeyHash",
+  credits_cents AS "creditsCents",
+  preferred_model AS "preferredModel",
+  created_at AS "createdAt"
+`;
 
-declare global {
-  // eslint-disable-next-line no-var
-  var __agentronicsStore: Store | undefined;
-}
+const DEVICE_SELECT = `
+  id,
+  user_id AS "userId",
+  device_token_hash AS "deviceTokenHash",
+  label,
+  last_seen_at AS "lastSeenAt",
+  created_at AS "createdAt"
+`;
 
-const store: Store =
-  globalThis.__agentronicsStore ??
-  (globalThis.__agentronicsStore = {
-    users: new Map(),
-    devices: new Map(),
-    pairingCodes: new Map(),
-    usage: [],
-    topUps: [],
-    usageSeq: 1,
-    topUpSeq: 1,
-    processedSessions: new Set(),
-  });
+const PAIRING_SELECT = `
+  code,
+  user_id AS "userId",
+  expires_at AS "expiresAt",
+  consumed_at AS "consumedAt"
+`;
+
+const USAGE_SELECT = `
+  id,
+  user_id AS "userId",
+  event_type AS "eventType",
+  cost_cents AS "costCents",
+  created_at AS "createdAt",
+  metadata
+`;
+
+const TOPUP_SELECT = `
+  id,
+  user_id AS "userId",
+  amount_cents AS "amountCents",
+  stripe_session_id AS "stripeSessionId",
+  created_at AS "createdAt"
+`;
 
 export const db = {
   users: {
-    get: (id: string) => store.users.get(id) ?? null,
-    upsert: (row: UserRow) => {
-      store.users.set(row.id, row);
-      return row;
+    async get(id: string): Promise<UserRow | null> {
+      const rows = (await sql`SELECT ${sql.unsafe(USER_SELECT)} FROM users WHERE id = ${id}`) as UserRow[];
+      return rows[0] ?? null;
     },
-    update: (id: string, patch: Partial<UserRow>) => {
-      const cur = store.users.get(id);
-      if (!cur) return null;
-      const next = { ...cur, ...patch };
-      store.users.set(id, next);
-      return next;
+    async upsert(row: UserRow): Promise<UserRow> {
+      await sql`
+        INSERT INTO users (id, email, stripe_customer_id, api_key_hash, credits_cents, preferred_model, created_at)
+        VALUES (${row.id}, ${row.email}, ${row.stripeCustomerId}, ${row.apiKeyHash}, ${row.creditsCents}, ${row.preferredModel}, ${row.createdAt})
+        ON CONFLICT (id) DO UPDATE SET
+          email = COALESCE(NULLIF(EXCLUDED.email, ''), users.email),
+          stripe_customer_id = COALESCE(EXCLUDED.stripe_customer_id, users.stripe_customer_id)
+      `;
+      const u = await db.users.get(row.id);
+      if (!u) throw new Error("upsert failed");
+      return u;
     },
-    addCredits: (id: string, cents: number) => {
-      const cur = store.users.get(id);
-      if (!cur) return null;
-      const next = { ...cur, creditsCents: cur.creditsCents + cents };
-      store.users.set(id, next);
-      return next;
-    },
-    byStripeCustomer: (customerId: string) => {
-      for (const u of store.users.values()) {
-        if (u.stripeCustomerId === customerId) return u;
+    async update(id: string, patch: Partial<UserRow>): Promise<UserRow | null> {
+      // Apply allowed columns individually — Neon http driver doesn't do
+      // dynamic multi-column updates ergonomically, and the patch surface is small.
+      if (patch.email !== undefined) {
+        await sql`UPDATE users SET email = ${patch.email} WHERE id = ${id}`;
       }
-      return null;
+      if (patch.stripeCustomerId !== undefined) {
+        await sql`UPDATE users SET stripe_customer_id = ${patch.stripeCustomerId} WHERE id = ${id}`;
+      }
+      if (patch.apiKeyHash !== undefined) {
+        await sql`UPDATE users SET api_key_hash = ${patch.apiKeyHash} WHERE id = ${id}`;
+      }
+      if (patch.creditsCents !== undefined) {
+        await sql`UPDATE users SET credits_cents = ${patch.creditsCents} WHERE id = ${id}`;
+      }
+      if (patch.preferredModel !== undefined) {
+        await sql`UPDATE users SET preferred_model = ${patch.preferredModel} WHERE id = ${id}`;
+      }
+      return db.users.get(id);
+    },
+    async addCredits(id: string, cents: number): Promise<UserRow | null> {
+      const rows = (await sql`
+        UPDATE users SET credits_cents = credits_cents + ${cents}
+        WHERE id = ${id}
+        RETURNING ${sql.unsafe(USER_SELECT)}
+      `) as UserRow[];
+      return rows[0] ?? null;
+    },
+    async byStripeCustomer(customerId: string): Promise<UserRow | null> {
+      const rows = (await sql`
+        SELECT ${sql.unsafe(USER_SELECT)} FROM users WHERE stripe_customer_id = ${customerId} LIMIT 1
+      `) as UserRow[];
+      return rows[0] ?? null;
     },
   },
   devices: {
-    list: (userId: string) =>
-      [...store.devices.values()].filter((d) => d.userId === userId),
-    insert: (row: DeviceRow) => {
-      store.devices.set(row.id, row);
+    async list(userId: string): Promise<DeviceRow[]> {
+      return (await sql`
+        SELECT ${sql.unsafe(DEVICE_SELECT)} FROM devices WHERE user_id = ${userId} ORDER BY created_at DESC
+      `) as DeviceRow[];
+    },
+    async insert(row: DeviceRow): Promise<DeviceRow> {
+      await sql`
+        INSERT INTO devices (id, user_id, device_token_hash, label, last_seen_at, created_at)
+        VALUES (${row.id}, ${row.userId}, ${row.deviceTokenHash}, ${row.label}, ${row.lastSeenAt}, ${row.createdAt})
+      `;
       return row;
     },
-    delete: (id: string) => store.devices.delete(id),
+    async delete(id: string): Promise<boolean> {
+      const rows = (await sql`DELETE FROM devices WHERE id = ${id} RETURNING id`) as Array<{ id: string }>;
+      return rows.length > 0;
+    },
   },
   pairingCodes: {
-    get: (code: string) => store.pairingCodes.get(code) ?? null,
-    insert: (row: PairingCodeRow) => {
-      store.pairingCodes.set(row.code, row);
+    async get(code: string): Promise<PairingCodeRow | null> {
+      const rows = (await sql`
+        SELECT ${sql.unsafe(PAIRING_SELECT)} FROM pairing_codes WHERE code = ${code}
+      `) as PairingCodeRow[];
+      return rows[0] ?? null;
+    },
+    async insert(row: PairingCodeRow): Promise<PairingCodeRow> {
+      await sql`
+        INSERT INTO pairing_codes (code, user_id, expires_at, consumed_at)
+        VALUES (${row.code}, ${row.userId}, ${row.expiresAt}, ${row.consumedAt})
+      `;
       return row;
     },
-    consume: (code: string) => {
-      const row = store.pairingCodes.get(code);
-      if (!row) return null;
-      const next = { ...row, consumedAt: new Date().toISOString() };
-      store.pairingCodes.set(code, next);
-      return next;
+    async consume(code: string): Promise<PairingCodeRow | null> {
+      const rows = (await sql`
+        UPDATE pairing_codes SET consumed_at = now()
+        WHERE code = ${code}
+        RETURNING ${sql.unsafe(PAIRING_SELECT)}
+      `) as PairingCodeRow[];
+      return rows[0] ?? null;
     },
-    deleteForUser: (userId: string) => {
-      for (const [code, row] of store.pairingCodes.entries()) {
-        if (row.userId === userId) store.pairingCodes.delete(code);
-      }
+    async deleteForUser(userId: string): Promise<void> {
+      await sql`DELETE FROM pairing_codes WHERE user_id = ${userId}`;
     },
   },
   usage: {
-    count: (userId: string, sinceISO: string) =>
-      store.usage.filter((e) => e.userId === userId && e.createdAt >= sinceISO).length,
-    recentSpendCents: (userId: string, sinceISO: string) =>
-      store.usage
-        .filter((e) => e.userId === userId && e.createdAt >= sinceISO)
-        .reduce((sum, e) => sum + e.costCents, 0),
-    insert: (userId: string, costCents: number, metadata: Record<string, unknown> = {}) => {
-      const row: UsageEventRow = {
-        id: store.usageSeq++,
-        userId,
-        eventType: "task_run",
-        costCents,
-        createdAt: new Date().toISOString(),
-        metadata,
-      };
-      store.usage.push(row);
-      return row;
+    async count(userId: string, sinceISO: string): Promise<number> {
+      const rows = (await sql`
+        SELECT COUNT(*)::int AS n FROM usage_events
+        WHERE user_id = ${userId} AND created_at >= ${sinceISO}
+      `) as Array<{ n: number }>;
+      return rows[0]?.n ?? 0;
+    },
+    async recentSpendCents(userId: string, sinceISO: string): Promise<number> {
+      const rows = (await sql`
+        SELECT COALESCE(SUM(cost_cents), 0)::int AS total FROM usage_events
+        WHERE user_id = ${userId} AND created_at >= ${sinceISO}
+      `) as Array<{ total: number }>;
+      return rows[0]?.total ?? 0;
+    },
+    async insert(
+      userId: string,
+      costCents: number,
+      metadata: Record<string, unknown> = {},
+    ): Promise<UsageEventRow> {
+      const rows = (await sql`
+        INSERT INTO usage_events (user_id, event_type, cost_cents, metadata)
+        VALUES (${userId}, 'task_run', ${costCents}, ${JSON.stringify(metadata)}::jsonb)
+        RETURNING ${sql.unsafe(USAGE_SELECT)}
+      `) as UsageEventRow[];
+      return rows[0]!;
     },
   },
   topUps: {
-    list: (userId: string) =>
-      store.topUps.filter((t) => t.userId === userId).sort((a, b) => b.id - a.id),
-    insert: (userId: string, amountCents: number, stripeSessionId: string) => {
-      const row: TopUpRow = {
-        id: store.topUpSeq++,
-        userId,
-        amountCents,
-        stripeSessionId,
-        createdAt: new Date().toISOString(),
-      };
-      store.topUps.push(row);
-      return row;
+    async list(userId: string): Promise<TopUpRow[]> {
+      return (await sql`
+        SELECT ${sql.unsafe(TOPUP_SELECT)} FROM top_ups WHERE user_id = ${userId} ORDER BY id DESC
+      `) as TopUpRow[];
     },
-    hasProcessed: (sessionId: string) => store.processedSessions.has(sessionId),
-    markProcessed: (sessionId: string) => store.processedSessions.add(sessionId),
+    async insert(userId: string, amountCents: number, stripeSessionId: string): Promise<TopUpRow | null> {
+      const rows = (await sql`
+        INSERT INTO top_ups (user_id, amount_cents, stripe_session_id)
+        VALUES (${userId}, ${amountCents}, ${stripeSessionId})
+        ON CONFLICT (stripe_session_id) DO NOTHING
+        RETURNING ${sql.unsafe(TOPUP_SELECT)}
+      `) as TopUpRow[];
+      return rows[0] ?? null;
+    },
+    async hasProcessed(sessionId: string): Promise<boolean> {
+      const rows = (await sql`
+        SELECT 1 AS ok FROM processed_stripe_sessions WHERE session_id = ${sessionId} LIMIT 1
+      `) as Array<{ ok: number }>;
+      return rows.length > 0;
+    },
+    async markProcessed(sessionId: string): Promise<void> {
+      await sql`
+        INSERT INTO processed_stripe_sessions (session_id)
+        VALUES (${sessionId})
+        ON CONFLICT (session_id) DO NOTHING
+      `;
+    },
   },
 };
