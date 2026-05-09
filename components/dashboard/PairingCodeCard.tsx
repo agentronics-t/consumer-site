@@ -38,25 +38,25 @@ export function PairingCodeCard() {
 
   return (
     <Card>
-      <div className="text-[11px] font-semibold uppercase tracking-widest text-muted">
+      <div className="text-[11px] font-semibold uppercase tracking-widest text-text-muted">
         Pair the extension
       </div>
-      <div className="mt-1 font-display text-lg font-semibold text-ink">
+      <div className="mt-1 font-display text-lg font-semibold text-text-primary">
         Link to your account
       </div>
 
-      <div className="mt-5 rounded-xl border border-line bg-paper-soft p-6">
+      <div className="mt-5 rounded-xl border border-border bg-bg-elevated p-6">
         {state && !expired ? (
           <div className="flex flex-col items-center gap-2">
-            <div className="font-mono text-4xl font-bold tracking-[0.4em] text-ink">
+            <div className="font-mono text-4xl font-bold tracking-[0.4em] text-text-primary">
               {state.code}
             </div>
-            <div className="font-mono text-xs text-muted">
+            <div className="font-mono text-xs text-text-muted">
               expires in {String(mm).padStart(2, "0")}:{String(ss).padStart(2, "0")}
             </div>
           </div>
         ) : (
-          <div className="text-center text-sm text-muted">
+          <div className="text-center text-sm text-text-muted">
             {expired ? "Code expired." : "Generate a 6-digit code and paste it into the extension."}
           </div>
         )}
@@ -66,18 +66,18 @@ export function PairingCodeCard() {
         <button
           onClick={generate}
           disabled={loading}
-          className="rounded-full bg-ink px-5 py-2 text-xs font-semibold uppercase tracking-widest text-paper transition-colors hover:bg-ink-soft disabled:opacity-50"
+          className="rounded-full bg-text-primary px-5 py-2 text-xs font-semibold uppercase tracking-widest text-bg transition-colors hover:bg-text-secondary disabled:opacity-50"
         >
           {loading ? "Generating…" : state && !expired ? "Regenerate" : "Generate code"}
         </button>
       </div>
 
-      {error && <p className="mt-3 text-xs text-gold">Error: {error}</p>}
+      {error && <p className="mt-3 text-xs text-accent">Error: {error}</p>}
 
-      <ol className="mt-5 space-y-2 text-sm text-ink-soft">
+      <ol className="mt-5 space-y-2 text-sm text-text-secondary">
         <li>1. Open the extension popup.</li>
         <li>
-          2. Click <span className="font-mono text-ink">Link to account</span>.
+          2. Click <span className="font-mono text-text-primary">Link to account</span>.
         </li>
         <li>3. Paste the code. You&apos;re paired.</li>
       </ol>

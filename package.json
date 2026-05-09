@@ -1,5 +1,5 @@
 {
-  "name": "agentronics-site",
+  "name": "agentronics-consumer",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -19,7 +19,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "stripe": "^17.5.0",
-    "svix": "^1.39.0"
+    "svix": "^1.39.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.0",

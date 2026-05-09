@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 
 export type ThemeChoice = "light" | "dark" | "system";
 export type ResolvedTheme = "light" | "dark";
@@ -12,35 +19,39 @@ type Ctx = {
 };
 
 const ThemeCtx = createContext<Ctx | null>(null);
-const STORAGE_KEY = "agentronics-theme";
+const STORAGE_KEY = "agentronics:theme";
 
-function systemPrefersDark(): boolean {
+function systemPrefersLight(): boolean {
   if (typeof window === "undefined") return false;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  return window.matchMedia("(prefers-color-scheme: light)").matches;
+}
+
+function resolve(choice: ThemeChoice): ResolvedTheme {
+  if (choice === "light") return "light";
+  if (choice === "dark") return "dark";
+  return systemPrefersLight() ? "light" : "dark";
 }
 
 function applyTheme(choice: ThemeChoice) {
-  const root = document.documentElement;
-  const wantDark = choice === "dark" || (choice === "system" && systemPrefersDark());
-  root.classList.toggle("dark", wantDark);
+  document.documentElement.classList.toggle("light", resolve(choice) === "light");
 }
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
+export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<ThemeChoice>("system");
-  const [resolved, setResolved] = useState<ResolvedTheme>("light");
+  const [resolved, setResolved] = useState<ResolvedTheme>("dark");
 
   useEffect(() => {
     const stored = (localStorage.getItem(STORAGE_KEY) as ThemeChoice | null) ?? "system";
     setThemeState(stored);
     applyTheme(stored);
-    setResolved(document.documentElement.classList.contains("dark") ? "dark" : "light");
+    setResolved(resolve(stored));
 
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const mq = window.matchMedia("(prefers-color-scheme: light)");
     const onChange = () => {
       const t = (localStorage.getItem(STORAGE_KEY) as ThemeChoice | null) ?? "system";
       if (t !== "system") return;
       applyTheme("system");
-      setResolved(document.documentElement.classList.contains("dark") ? "dark" : "light");
+      setResolved(resolve("system"));
     };
     mq.addEventListener("change", onChange);
     return () => mq.removeEventListener("change", onChange);
@@ -51,15 +62,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     document.documentElement.classList.add("theme-transition");
     applyTheme(t);
     setThemeState(t);
-    setResolved(document.documentElement.classList.contains("dark") ? "dark" : "light");
+    setResolved(resolve(t));
     window.setTimeout(() => {
       document.documentElement.classList.remove("theme-transition");
     }, 200);
   }, []);
 
-  return (
-    <ThemeCtx.Provider value={{ theme, resolved, setTheme }}>{children}</ThemeCtx.Provider>
-  );
+  return <ThemeCtx.Provider value={{ theme, resolved, setTheme }}>{children}</ThemeCtx.Provider>;
 }
 
 export function useTheme(): Ctx {
@@ -68,14 +77,17 @@ export function useTheme(): Ctx {
   return ctx;
 }
 
-// Inline script runs before hydration to avoid a flash of wrong theme.
+/* Inline script string — runs before hydration to avoid a flash of wrong theme.
+ * Dark is the default (no class); light-mode users get `html.light`. */
 export const themeInitScript = `
 (function () {
   try {
     var k = '${STORAGE_KEY}';
     var t = localStorage.getItem(k) || 'system';
-    var dark = t === 'dark' || (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    if (dark) document.documentElement.classList.add('dark');
+    var light =
+      t === 'light' ||
+      (t === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches);
+    if (light) document.documentElement.classList.add('light');
   } catch (_) {}
 })();
 `;

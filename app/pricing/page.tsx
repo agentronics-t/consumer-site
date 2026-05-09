@@ -25,14 +25,14 @@ export default function PricingPage() {
       <Navbar />
       <main className="pt-32">
         <section className="mx-auto max-w-4xl px-6 text-center">
-          <div className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-muted">
+          <div className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">
             Pricing
           </div>
-          <h1 className="font-display text-5xl font-bold leading-[1.04] tracking-tight text-ink md:text-6xl">
+          <h1 className="font-display text-5xl font-bold leading-[1.04] tracking-tight text-text-primary md:text-6xl">
             Free to install.{" "}
-            <span className="font-serif italic text-ember">Pennies to run.</span>
+            <span className="font-sans italic text-border-glow">Pennies to run.</span>
           </h1>
-          <p className="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-ink-soft">
+          <p className="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-text-secondary">
             No subscription. No seats. You pay the raw model cost plus a small margin —
             that&apos;s the whole deal.
           </p>
@@ -41,16 +41,16 @@ export default function PricingPage() {
         <PricingCards compact />
 
         <section className="mx-auto max-w-4xl px-6 py-16">
-          <h2 className="mb-3 font-display text-3xl font-bold tracking-tight text-ink md:text-4xl">
+          <h2 className="mb-3 font-display text-3xl font-bold tracking-tight text-text-primary md:text-4xl">
             What tasks actually cost
           </h2>
-          <p className="mb-8 text-[15px] text-ink-soft">
+          <p className="mb-8 text-[15px] text-text-secondary">
             A $10 top-up covers weeks of everyday use. Real examples, real prices.
           </p>
-          <div className="overflow-hidden rounded-2xl border border-line bg-card card-shadow">
+          <div className="overflow-hidden rounded-2xl border border-border bg-bg-card card-shadow">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-line bg-paper-soft text-muted">
+                <tr className="border-b border-border bg-bg-elevated text-text-muted">
                   <th className="p-4 text-xs font-semibold uppercase tracking-widest">Task</th>
                   <th className="p-4 text-xs font-semibold uppercase tracking-widest">Model</th>
                   <th className="p-4 text-right text-xs font-semibold uppercase tracking-widest">
@@ -60,16 +60,16 @@ export default function PricingPage() {
               </thead>
               <tbody>
                 {examples.map((row) => (
-                  <tr key={row.task} className="border-b border-line last:border-0">
-                    <td className="p-4 text-ink-soft">{row.task}</td>
-                    <td className="p-4 text-muted">{row.model}</td>
-                    <td className="p-4 text-right font-mono text-ink">{row.cost}</td>
+                  <tr key={row.task} className="border-b border-border last:border-0">
+                    <td className="p-4 text-text-secondary">{row.task}</td>
+                    <td className="p-4 text-text-muted">{row.model}</td>
+                    <td className="p-4 text-right font-mono text-text-primary">{row.cost}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <p className="mt-4 text-xs text-muted">
+          <p className="mt-4 text-xs text-text-muted">
             Prices vary with task complexity. The extension shows exact cost before every run.
           </p>
         </section>

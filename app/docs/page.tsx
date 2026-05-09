@@ -15,14 +15,14 @@ export default function DocsPage() {
       <Navbar />
       <main className="flex min-h-[70vh] items-center pt-32">
         <div className="mx-auto max-w-2xl px-6 text-center">
-          <div className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-muted">
+          <div className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">
             Help center
           </div>
-          <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-ink md:text-5xl">
+          <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-text-primary md:text-5xl">
             Need a hand?{" "}
-            <span className="font-serif italic text-ember">We&apos;re listening.</span>
+            <span className="font-sans italic text-border-glow">We&apos;re listening.</span>
           </h1>
-          <p className="mt-5 text-[17px] leading-relaxed text-ink-soft">
+          <p className="mt-5 text-[17px] leading-relaxed text-text-secondary">
             Full guides are on the way. In the meantime, reach out and we&apos;ll walk you through anything.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">

@@ -9,13 +9,13 @@ export default function PrivacyPage() {
       <Navbar />
       <main className="pt-32">
         <article className="mx-auto max-w-3xl px-6 pb-24">
-          <h1 className="font-display text-4xl font-bold tracking-tight text-ink">
+          <h1 className="font-display text-4xl font-bold tracking-tight text-text-primary">
             Privacy Policy
           </h1>
-          <p className="mt-3 text-xs text-muted">Effective 2026-04-22</p>
-          <div className="mt-10 space-y-8 text-[15px] leading-relaxed text-ink-soft">
+          <p className="mt-3 text-xs text-text-muted">Effective 2026-04-22</p>
+          <div className="mt-10 space-y-8 text-[15px] leading-relaxed text-text-secondary">
             <section>
-              <h2 className="font-display text-xl font-semibold text-ink">What we collect</h2>
+              <h2 className="font-display text-xl font-semibold text-text-primary">What we collect</h2>
               <p className="mt-2">
                 Your account email (from OAuth via Clerk), a hashed API key, wallet balance and
                 top-up history (via Stripe), your default model preference, and task-run metadata —
@@ -24,7 +24,7 @@ export default function PrivacyPage() {
               </p>
             </section>
             <section>
-              <h2 className="font-display text-xl font-semibold text-ink">What stays on your device</h2>
+              <h2 className="font-display text-xl font-semibold text-text-primary">What stays on your device</h2>
               <p className="mt-2">
                 Your logged-in sessions, cookies, passwords, and the actual content of pages you
                 browse. Agentronics runs inside Chrome and uses what&apos;s already there — we don&apos;t
@@ -32,7 +32,7 @@ export default function PrivacyPage() {
               </p>
             </section>
             <section>
-              <h2 className="font-display text-xl font-semibold text-ink">Model providers</h2>
+              <h2 className="font-display text-xl font-semibold text-text-primary">Model providers</h2>
               <p className="mt-2">
                 When you run a task, the prompt and the page context the agent needs are sent to
                 the model provider you picked (Anthropic, OpenAI, or Google). Their data policies
@@ -40,13 +40,13 @@ export default function PrivacyPage() {
               </p>
             </section>
             <section>
-              <h2 className="font-display text-xl font-semibold text-ink">Processors</h2>
+              <h2 className="font-display text-xl font-semibold text-text-primary">Processors</h2>
               <p className="mt-2">
                 Clerk (auth), Stripe (payments), Vercel (hosting), and the model provider you pick.
               </p>
             </section>
             <section>
-              <h2 className="font-display text-xl font-semibold text-ink">Your rights</h2>
+              <h2 className="font-display text-xl font-semibold text-text-primary">Your rights</h2>
               <p className="mt-2">
                 Export, deletion, and correction: email privacy@agentronics.com. We respond within
                 30 days.

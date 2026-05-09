@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
+import { env } from "@/lib/env";
 import { assertStripe } from "@/lib/stripe";
 import { db } from "@/lib/db";
 
@@ -7,7 +8,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
-  const secret = process.env.STRIPE_WEBHOOK_SECRET;
+  const secret = env.STRIPE_WEBHOOK_SECRET;
   if (!secret) return NextResponse.json({ error: "missing_webhook_secret" }, { status: 500 });
 
   let stripe;

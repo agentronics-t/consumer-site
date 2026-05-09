@@ -37,30 +37,30 @@ const cols: Array<{ heading: string; items: Array<{ label: string; href: string;
 
 export function Footer() {
   return (
-    <footer className="relative border-t border-line bg-paper">
+    <footer className="relative border-t border-border bg-bg">
       <div className="mx-auto max-w-6xl px-6 py-16">
         <div className="grid gap-12 md:grid-cols-[2fr_1fr_1fr_1fr_1fr]">
           <div className="space-y-4">
             <Logotype />
-            <p className="max-w-xs text-sm text-muted">
+            <p className="max-w-xs text-sm text-text-muted">
               Your browser, on autopilot. Tell it what to do — it shops, books, researches, and fills
               the forms for you.
             </p>
           </div>
           {cols.map((c) => (
             <div key={c.heading}>
-              <div className="mb-4 text-xs font-semibold uppercase tracking-widest text-muted">
+              <div className="mb-4 text-xs font-semibold uppercase tracking-widest text-text-muted">
                 {c.heading}
               </div>
               <ul className="space-y-3">
                 {c.items.map((i) => (
                   <li key={i.label}>
                     {i.external ? (
-                      <a href={i.href} target="_blank" rel="noreferrer" className="text-sm text-ink-soft hover:text-ink">
+                      <a href={i.href} target="_blank" rel="noreferrer" className="text-sm text-text-secondary hover:text-text-primary">
                         {i.label}
                       </a>
                     ) : (
-                      <Link href={i.href} className="text-sm text-ink-soft hover:text-ink">
+                      <Link href={i.href} className="text-sm text-text-secondary hover:text-text-primary">
                         {i.label}
                       </Link>
                     )}
@@ -70,7 +70,7 @@ export function Footer() {
             </div>
           ))}
         </div>
-        <div className="mt-16 flex flex-col items-start justify-between gap-3 border-t border-line pt-8 text-xs text-muted md:flex-row md:items-center">
+        <div className="mt-16 flex flex-col items-start justify-between gap-3 border-t border-border pt-8 text-xs text-text-muted md:flex-row md:items-center">
           <div>© {new Date().getFullYear()} Agentronics — browse less, do more.</div>
           <div>Made for the agentic web.</div>
         </div>

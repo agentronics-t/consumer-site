@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { Webhook } from "svix";
+import { env } from "@/lib/env";
 import { bootstrapUser } from "@/lib/userBootstrap";
 
 export const runtime = "nodejs";
@@ -12,7 +13,7 @@ type ClerkUserPayload = {
 };
 
 export async function POST(req: Request) {
-  const secret = process.env.CLERK_WEBHOOK_SECRET;
+  const secret = env.CLERK_WEBHOOK_SECRET;
   if (!secret) {
     return NextResponse.json({ error: "CLERK_WEBHOOK_SECRET missing" }, { status: 500 });
   }

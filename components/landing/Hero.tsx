@@ -19,17 +19,17 @@ export function Hero() {
           transition={{ duration: 0.7, ease: EASE }}
           className="relative"
         >
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-line bg-card px-3 py-1.5 text-xs text-ink-soft card-shadow">
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-ember" />
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-bg-card px-3 py-1.5 text-xs text-text-secondary card-shadow">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-border-glow" />
             New — works on any site, with your favorite AI
           </div>
 
-          <h1 className="font-display text-[44px] font-bold leading-[1.04] tracking-tight text-ink md:text-[68px]">
+          <h1 className="font-display text-[44px] font-bold leading-[1.04] tracking-tight text-text-primary md:text-[68px]">
             Tell your browser what to do.{" "}
-            <span className="font-serif italic text-ember">It does it.</span>
+            <span className="font-sans italic text-border-glow">It does it.</span>
           </h1>
 
-          <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-ink-soft md:text-lg">
+          <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-text-secondary md:text-lg">
             Agentronics is a Chrome extension that takes the wheel and finishes the task —
             shop, book, research, fill forms, compare — on any website. You pick the AI,
             pay only for what you use.
@@ -44,7 +44,7 @@ export function Hero() {
             </ButtonLink>
           </div>
 
-          <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px] text-muted">
+          <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px] text-text-muted">
             <span className="flex items-center gap-1.5">
               <CheckDot /> Free to start
             </span>

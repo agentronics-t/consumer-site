@@ -1,4 +1,5 @@
 import type { ModelId } from "@/lib/db";
+import { requireServerEnv } from "@/lib/env";
 
 export const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
 
@@ -24,7 +25,5 @@ export function costToDebitCents(reportedUsdCost: number | null | undefined): nu
 }
 
 export function assertOpenRouterKey(): string {
-  const key = process.env.OPENROUTER_API_KEY;
-  if (!key) throw new Error("OPENROUTER_API_KEY is not set");
-  return key;
+  return requireServerEnv("OPENROUTER_API_KEY");
 }

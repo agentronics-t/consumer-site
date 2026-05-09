@@ -17,11 +17,11 @@ export function FinalCTA() {
         transition={{ duration: 0.8, ease: EASE }}
         className="mx-auto max-w-3xl px-6 text-center"
       >
-        <h2 className="font-display text-4xl font-bold leading-[1.04] tracking-tight text-ink md:text-6xl">
+        <h2 className="font-display text-4xl font-bold leading-[1.04] tracking-tight text-text-primary md:text-6xl">
           Browse less.{" "}
-          <span className="font-serif italic text-ember">Do more.</span>
+          <span className="font-sans italic text-border-glow">Do more.</span>
         </h2>
-        <p className="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-ink-soft">
+        <p className="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-text-secondary">
           Agentronics is free to install and $10 to start. Your AI, your browser, your rules.
         </p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
@@ -32,7 +32,7 @@ export function FinalCTA() {
             Watch the demo
           </ButtonLink>
         </div>
-        <div className="mt-5 text-xs text-muted">
+        <div className="mt-5 text-xs text-text-muted">
           No card to start · Cancel any time (there's nothing to cancel) · Your data stays in your browser
         </div>
       </motion.div>

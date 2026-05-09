@@ -1,36 +1,16 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
-import { Inter, Space_Grotesk, JetBrains_Mono, Instrument_Serif } from "next/font/google";
+import { Space_Mono } from "next/font/google";
 import { LenisProvider } from "@/components/providers/LenisProvider";
 import { ThemeProvider, themeInitScript } from "@/components/providers/ThemeProvider";
 import { siteConfig } from "@/lib/siteConfig";
 import "./globals.css";
 
-const inter = Inter({
+const spaceMono = Space_Mono({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-space-mono",
   display: "swap",
-});
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-space-grotesk",
-  display: "swap",
-  weight: ["500", "700"],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-jetbrains-mono",
-  display: "swap",
-});
-
-const instrument = Instrument_Serif({
-  subsets: ["latin"],
-  variable: "--font-instrument",
-  display: "swap",
-  weight: "400",
-  style: ["normal", "italic"],
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -55,11 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${instrument.variable}`}
-    >
+    <html lang="en" suppressHydrationWarning className={spaceMono.variable}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
@@ -70,31 +46,35 @@ export default function RootLayout({
             appearance={{
               variables: {
                 colorPrimary: "#6366F1",
-                colorBackground: "var(--color-card)",
-                colorText: "var(--color-ink)",
-                colorTextSecondary: "var(--color-muted)",
-                colorInputBackground: "var(--color-paper-soft)",
-                colorInputText: "var(--color-ink)",
+                colorBackground: "var(--color-bg-card)",
+                colorText: "var(--color-text-primary)",
+                colorTextSecondary: "var(--color-text-muted)",
+                colorInputBackground: "var(--color-bg-elevated)",
+                colorInputText: "var(--color-text-primary)",
                 colorTextOnPrimaryBackground: "#FFFFFF",
-                colorNeutral: "var(--color-ink)",
+                colorNeutral: "var(--color-text-primary)",
                 borderRadius: "0.75rem",
               },
               elements: {
                 rootBox: "w-full",
-                card: "bg-card border border-line rounded-2xl card-shadow",
+                card: "bg-bg-card border border-border rounded-2xl card-shadow",
                 footer: "hidden",
                 footerAction: "hidden",
                 logoBox: "hidden",
-                headerTitle: "font-display text-ink",
-                headerSubtitle: "text-ink-soft",
-                formButtonPrimary: "bg-ember hover:bg-ember-soft text-white normal-case",
-                socialButtonsBlockButton: "border border-line bg-card hover:bg-paper-soft text-ink",
-                formFieldInput: "bg-paper-soft border border-line text-ink",
-                formFieldLabel: "text-ink-soft",
-                dividerLine: "bg-line",
-                dividerText: "text-muted",
-                identityPreviewText: "text-ink",
-                identityPreviewEditButton: "text-ember hover:text-ember-soft",
+                headerTitle: "font-sans text-text-primary",
+                headerSubtitle: "text-text-secondary",
+                formButtonPrimary:
+                  "bg-border-glow hover:opacity-90 text-white normal-case",
+                socialButtonsBlockButton:
+                  "border border-border bg-bg-card hover:bg-bg-card-hover text-text-primary",
+                formFieldInput:
+                  "bg-bg-elevated border border-border text-text-primary",
+                formFieldLabel: "text-text-secondary",
+                dividerLine: "bg-border",
+                dividerText: "text-text-muted",
+                identityPreviewText: "text-text-primary",
+                identityPreviewEditButton:
+                  "text-border-glow hover:opacity-80",
               },
             }}
           >

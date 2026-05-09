@@ -1,0 +1,174 @@
+/* =========================================================================
+ * Agentronics design tokens — Tailwind-4 edition
+ *
+ * Source of truth for the three marketing surfaces:
+ *   - apps/consumer       (this file — canonical copy)
+ *   - apps/enterprise     (mirrors this file)
+ *   - apps/extension      (mirrors this file)
+ *
+ * The SDK monorepo (apps/sdk) ships a separate, minimal token file at
+ * `apps/sdk/packages/theme/src/tokens.css`. The two files share the same
+ * brand hex values (#07091A bg, #6366F1 indigo, #F59E0B amber) but emit
+ * different output: Tailwind `@theme` blocks here, plain CSS custom
+ * properties there. Keep the **hex values** in sync across both — if the
+ * brand palette changes, update both files in the same commit.
+ *
+ * Callers must import "tailwindcss" themselves BEFORE importing this file
+ * (so `@theme` resolves utilities against the app's own node_modules).
+ *
+ * Dark is the default theme. `html.light` opts into light mode.
+ * ========================================================================= */
+
+/* -------------------------------------------------------------------------
+ * Typography — Space Mono is the entire stack (display, body, code).
+ * ------------------------------------------------------------------------- */
+@theme {
+  --font-sans: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-mono: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-display: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* -------------------------------------------------------------------------
+ * Dark palette (default) — lifted from enterprise, names unified.
+ * ------------------------------------------------------------------------- */
+@theme {
+  --color-bg:              #07091A;
+  --color-bg-elevated:     color-mix(in srgb, #07091A 92%, #6366F1 8%);
+  --color-bg-card:         color-mix(in srgb, #07091A 85%, #6366F1 15%);
+  --color-bg-card-hover:   color-mix(in srgb, #07091A 75%, #6366F1 25%);
+  --color-bg-code:         color-mix(in srgb, #07091A 90%, #6366F1 10%);
+
+  --color-border:          rgba(99, 102, 241, 0.15);
+  --color-border-strong:   rgba(99, 102, 241, 0.40);
+  --color-border-glow:     #6366F1;
+  --color-border-glow-30:  rgba(99, 102, 241, 0.30);
+
+  --color-accent:          #F59E0B;
+  --color-accent-hover:    color-mix(in srgb, #F59E0B 80%, #ffffff 20%);
+
+  --color-text-primary:    #ffffff;
+  --color-text-secondary:  #94A3B8;
+  --color-text-muted:      #64748B;
+
+  --color-success:         #22C55E;
+  --color-danger:          #EF4444;
+  --color-warning:         #F59E0B;
+
+  --shadow-card:           0 1px 2px rgba(0, 0, 0, 0.40), 0 12px 28px -10px rgba(0, 0, 0, 0.55);
+  --shadow-card-strong:    0 2px 4px rgba(0, 0, 0, 0.50), 0 28px 60px -18px rgba(0, 0, 0, 0.70);
+
+  --ease-brand:            cubic-bezier(0.22, 1, 0.36, 1);
+  --radius-card:           12px;
+  --radius-pill:           999px;
+}
+
+/* -------------------------------------------------------------------------
+ * Light palette — complement to the dark baseline.
+ *
+ * Brand rules:
+ *   - Indigo (#6366F1) is hue-stable: same in both modes.
+ *   - Amber  (#F59E0B) is hue-stable: same in both modes.
+ *
+ * WCAG constraint (light mode):
+ *   #F59E0B on #F7F7FB has ~2.1:1 contrast — fails AA for body text.
+ *   Therefore in light mode, `--color-accent` is valid for:
+ *     - filled buttons (text-on-amber passes)
+ *     - icon fills / decorative highlights
+ *     - display headings >= 24px bold (AA Large = 3:1)
+ *   It is NOT valid for body copy, small labels, or standalone links.
+ *   For those, use --color-text-primary or --color-border-glow (indigo).
+ * ------------------------------------------------------------------------- */
+html.light {
+  --color-bg:              #F7F7FB;
+  --color-bg-elevated:     #FFFFFF;
+  --color-bg-card:         #FFFFFF;
+  --color-bg-card-hover:   color-mix(in srgb, #FFFFFF 92%, #6366F1 8%);
+  --color-bg-code:         #F3F3FA;
+
+  --color-border:          rgba(7, 9, 26, 0.08);
+  --color-border-strong:   rgba(7, 9, 26, 0.18);
+  --color-border-glow:     #6366F1;
+  --color-border-glow-30:  rgba(99, 102, 241, 0.25);
+
+  --color-accent:          #F59E0B;
+  --color-accent-hover:    color-mix(in srgb, #F59E0B 80%, #000000 20%);
+
+  --color-text-primary:    #07091A;
+  --color-text-secondary:  #3F4358;
+  --color-text-muted:      #6B6E82;
+
+  --color-success:         #16A34A;
+  --color-danger:          #DC2626;
+  --color-warning:         #F59E0B;
+
+  --shadow-card:           0 1px 2px rgba(7, 9, 26, 0.04), 0 8px 24px -8px rgba(7, 9, 26, 0.10);
+  --shadow-card-strong:    0 1px 2px rgba(7, 9, 26, 0.06), 0 20px 48px -16px rgba(7, 9, 26, 0.20);
+
+  color-scheme: light;
+}
+
+:root { color-scheme: dark; }
+
+/* -------------------------------------------------------------------------
+ * Base resets + globals (scoped to @layer base so Tailwind utilities win).
+ * ------------------------------------------------------------------------- */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-text-secondary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-border-glow) 40%, transparent);
+    color: var(--color-text-primary);
+  }
+
+  :where(a, button, [role="button"]):focus-visible {
+    outline: 2px solid var(--color-border-glow);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--color-bg); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border-glow-30);
+    border-radius: 3px;
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * Smooth theme switching (add `.theme-transition` to <html> briefly when
+ * toggling to avoid jarring repaints). ThemeProvider adds/removes this.
+ * ------------------------------------------------------------------------- */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease !important;
+}
+
+/* -------------------------------------------------------------------------
+ * Reduced motion honored globally.
+ * ------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

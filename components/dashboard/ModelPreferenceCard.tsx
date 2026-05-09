@@ -33,13 +33,13 @@ export function ModelPreferenceCard({ initial }: { initial: ModelId }) {
 
   return (
     <Card>
-      <div className="text-[11px] font-semibold uppercase tracking-widest text-muted">
+      <div className="text-[11px] font-semibold uppercase tracking-widest text-text-muted">
         Default model
       </div>
-      <div className="mt-1 font-display text-lg font-semibold text-ink">
+      <div className="mt-1 font-display text-lg font-semibold text-text-primary">
         Pick the brain.
       </div>
-      <p className="mt-1 text-sm text-muted">
+      <p className="mt-1 text-sm text-text-muted">
         Used when you don't specify one. Switch any time in the extension popup.
       </p>
 
@@ -53,29 +53,29 @@ export function ModelPreferenceCard({ initial }: { initial: ModelId }) {
               disabled={saving}
               className={`flex w-full items-start gap-3 rounded-xl border p-3 text-left transition-colors ${
                 active
-                  ? "border-ember bg-ember/5"
-                  : "border-line bg-card hover:bg-paper-soft"
+                  ? "border-border-glow bg-border-glow/5"
+                  : "border-border bg-bg-card hover:bg-bg-elevated"
               }`}
             >
               <span
                 className={`mt-1 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${
-                  active ? "border-ember" : "border-line-strong"
+                  active ? "border-border-glow" : "border-border-strong"
                 }`}
               >
-                {active && <span className="h-2 w-2 rounded-full bg-ember" />}
+                {active && <span className="h-2 w-2 rounded-full bg-border-glow" />}
               </span>
               <div className="flex-1">
-                <div className="text-sm font-semibold text-ink">
-                  {m.name} <span className="font-normal text-muted">· {m.vendor}</span>
+                <div className="text-sm font-semibold text-text-primary">
+                  {m.name} <span className="font-normal text-text-muted">· {m.vendor}</span>
                 </div>
-                <div className="mt-0.5 text-xs text-muted">{m.blurb}</div>
+                <div className="mt-0.5 text-xs text-text-muted">{m.blurb}</div>
               </div>
             </button>
           );
         })}
       </div>
 
-      {error && <p className="mt-3 text-xs text-gold">Error: {error}</p>}
+      {error && <p className="mt-3 text-xs text-accent">Error: {error}</p>}
     </Card>
   );
 }

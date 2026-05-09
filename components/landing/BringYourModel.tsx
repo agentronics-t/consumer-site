@@ -21,18 +21,18 @@ export function BringYourModel() {
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6, ease: EASE }}
           >
-            <div className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-muted">
+            <div className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">
               Bring your own model
             </div>
-            <h2 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-ink md:text-5xl">
+            <h2 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-text-primary md:text-5xl">
               You pick the brain.{" "}
-              <span className="font-serif italic text-ember">We do the driving.</span>
+              <span className="font-sans italic text-border-glow">We do the driving.</span>
             </h2>
-            <p className="mt-5 text-[17px] leading-relaxed text-ink-soft">
+            <p className="mt-5 text-[17px] leading-relaxed text-text-secondary">
               Claude, GPT, Gemini, or anything we add next — pay the raw model cost plus a tiny
               margin. Switch per-task, per-project, or per-mood.
             </p>
-            <ul className="mt-6 space-y-3 text-[15px] text-ink-soft">
+            <ul className="mt-6 space-y-3 text-[15px] text-text-secondary">
               <li className="flex items-start gap-3">
                 <Check /> <span>No subscription. Start with a $10 top-up.</span>
               </li>
@@ -55,22 +55,22 @@ export function BringYourModel() {
             {models.map((m, i) => (
               <div
                 key={m.name}
-                className="flex items-center gap-5 rounded-2xl border border-line bg-card p-5 card-shadow"
+                className="flex items-center gap-5 rounded-2xl border border-border bg-bg-card p-5 card-shadow"
               >
                 <ModelMark name={m.name} />
                 <div className="flex-1">
-                  <div className="font-display text-[17px] font-semibold text-ink">
+                  <div className="font-display text-[17px] font-semibold text-text-primary">
                     {m.name}{" "}
-                    <span className="text-xs font-normal text-muted">· {m.vendor}</span>
+                    <span className="text-xs font-normal text-text-muted">· {m.vendor}</span>
                   </div>
-                  <div className="mt-0.5 text-[13px] text-muted">{m.blurb}</div>
+                  <div className="mt-0.5 text-[13px] text-text-muted">{m.blurb}</div>
                 </div>
-                <span className="rounded-md border border-line bg-paper-soft px-2 py-1 font-mono text-[10px] text-muted">
+                <span className="rounded-md border border-border bg-bg-elevated px-2 py-1 font-mono text-[10px] text-text-muted">
                   {i === 0 ? "default" : "switch anytime"}
                 </span>
               </div>
             ))}
-            <div className="mt-1 text-center text-xs text-muted">
+            <div className="mt-1 text-center text-xs text-text-muted">
               More models coming — you're never locked in.
             </div>
           </motion.div>

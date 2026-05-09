@@ -27,24 +27,24 @@ export function ApiKeyCard({
     <Card>
       <div className="flex items-start justify-between">
         <div>
-          <div className="text-[11px] font-semibold uppercase tracking-widest text-muted">
+          <div className="text-[11px] font-semibold uppercase tracking-widest text-text-muted">
             API key
           </div>
-          <div className="mt-1 font-display text-lg font-semibold text-ink">
+          <div className="mt-1 font-display text-lg font-semibold text-text-primary">
             Identify your extension
           </div>
         </div>
       </div>
 
-      <div className="mt-5 rounded-xl border border-line bg-paper-soft p-4 font-mono text-sm">
+      <div className="mt-5 rounded-xl border border-border bg-bg-elevated p-4 font-mono text-sm">
         {hasPlaintext ? (
           revealed ? (
-            <span className="break-all text-ember">{apiKeyPlaintext}</span>
+            <span className="break-all text-border-glow">{apiKeyPlaintext}</span>
           ) : (
-            <span className="text-muted">ak_live_••••••••••••••••••••••••••••••••</span>
+            <span className="text-text-muted">ak_live_••••••••••••••••••••••••••••••••</span>
           )
         ) : (
-          <span className="text-muted">{maskedPreview}</span>
+          <span className="text-text-muted">{maskedPreview}</span>
         )}
       </div>
 
@@ -53,13 +53,13 @@ export function ApiKeyCard({
           <>
             <button
               onClick={() => setRevealed((r) => !r)}
-              className="rounded-full border border-line bg-card px-4 py-1.5 text-xs text-ink transition-colors hover:bg-paper-soft"
+              className="rounded-full border border-border bg-bg-card px-4 py-1.5 text-xs text-text-primary transition-colors hover:bg-bg-elevated"
             >
               {revealed ? "Hide" : "Reveal"}
             </button>
             <button
               onClick={copy}
-              className="rounded-full border border-line bg-card px-4 py-1.5 text-xs text-ink transition-colors hover:bg-paper-soft"
+              className="rounded-full border border-border bg-bg-card px-4 py-1.5 text-xs text-text-primary transition-colors hover:bg-bg-elevated"
             >
               {copied ? "Copied ✓" : "Copy"}
             </button>
@@ -67,7 +67,7 @@ export function ApiKeyCard({
         )}
       </div>
 
-      <p className="mt-4 text-xs text-muted">
+      <p className="mt-4 text-xs text-text-muted">
         {hasPlaintext
           ? "Shown once. Copy it now — we only store the hash."
           : "Your key is hashed and stored. Rotate it if you need a new one."}

@@ -38,14 +38,14 @@ export function FAQ() {
     <section id="faq" className="relative py-24 md:py-32">
       <div className="mx-auto max-w-3xl px-6">
         <div className="mb-12">
-          <div className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-muted">
+          <div className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">
             FAQ
           </div>
-          <h2 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-ink md:text-5xl">
+          <h2 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-text-primary md:text-5xl">
             Answers, before you ask.
           </h2>
         </div>
-        <div className="divide-y divide-line rounded-2xl border border-line bg-card card-shadow">
+        <div className="divide-y divide-border rounded-2xl border border-border bg-bg-card card-shadow">
           {items.map((item, i) => {
             const isOpen = open === i;
             return (
@@ -54,13 +54,13 @@ export function FAQ() {
                   onClick={() => setOpen(isOpen ? null : i)}
                   className="flex w-full items-start justify-between gap-6 px-6 py-5 text-left"
                 >
-                  <span className="font-display text-[17px] font-semibold text-ink">
+                  <span className="font-display text-[17px] font-semibold text-text-primary">
                     {item.q}
                   </span>
                   <motion.span
                     animate={{ rotate: isOpen ? 45 : 0 }}
                     transition={{ duration: 0.25, ease: EASE }}
-                    className="mt-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-line text-muted"
+                    className="mt-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border text-text-muted"
                   >
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                       <path d="M12 5v14M5 12h14" />
@@ -76,7 +76,7 @@ export function FAQ() {
                       transition={{ duration: 0.3, ease: EASE }}
                       className="overflow-hidden"
                     >
-                      <p className="px-6 pb-6 text-[15px] leading-relaxed text-ink-soft">
+                      <p className="px-6 pb-6 text-[15px] leading-relaxed text-text-secondary">
                         {item.a}
                       </p>
                     </motion.div>

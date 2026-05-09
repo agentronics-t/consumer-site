@@ -12,10 +12,10 @@ export default function LoginPage() {
         <div className="absolute inset-x-0 top-0 -z-10 h-[320px] paper-dots opacity-70" />
         <div className="w-full max-w-[440px]">
           <div className="mb-8 text-center">
-            <h1 className="font-display text-3xl font-bold tracking-tight text-ink md:text-4xl">
+            <h1 className="font-display text-3xl font-bold tracking-tight text-text-primary md:text-4xl">
               Welcome back.
             </h1>
-            <p className="mt-2 text-sm text-ink-soft">
+            <p className="mt-2 text-sm text-text-secondary">
               Sign in to top up credits and pair your extension.
             </p>
           </div>
@@ -27,9 +27,9 @@ export default function LoginPage() {
             fallbackRedirectUrl="/dashboard"
           />
 
-          <p className="mt-6 text-center text-sm text-muted">
+          <p className="mt-6 text-center text-sm text-text-muted">
             New here?{" "}
-            <Link href="/signup" className="font-medium text-ember hover:text-ember-soft">
+            <Link href="/signup" className="font-medium text-border-glow hover:text-border-glow">
               Create an account
             </Link>
           </p>

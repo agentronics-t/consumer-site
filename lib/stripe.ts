@@ -1,6 +1,7 @@
 import Stripe from "stripe";
+import { env } from "./env";
 
-const key = process.env.STRIPE_SECRET_KEY;
+const key = env.STRIPE_SECRET_KEY;
 
 export const stripe = key
   ? new Stripe(key, { apiVersion: "2024-11-20.acacia" as Stripe.LatestApiVersion })

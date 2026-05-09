@@ -46,14 +46,14 @@ export function PricingCards({ compact = false }: { compact?: boolean }) {
       <div className="mx-auto max-w-5xl px-6">
         {!compact && (
           <div className="mb-14 max-w-2xl">
-            <div className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-muted">
+            <div className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">
               Pricing
             </div>
-            <h2 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-ink md:text-5xl">
+            <h2 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-text-primary md:text-5xl">
               Free to try.{" "}
-              <span className="font-serif italic text-ember">Pennies to use.</span>
+              <span className="font-sans italic text-border-glow">Pennies to use.</span>
             </h2>
-            <p className="mt-5 text-[17px] leading-relaxed text-ink-soft">
+            <p className="mt-5 text-[17px] leading-relaxed text-text-secondary">
               No subscription. No seats. Pay the model cost plus a small margin — that's it.
             </p>
           </div>
@@ -69,20 +69,20 @@ export function PricingCards({ compact = false }: { compact?: boolean }) {
               transition={{ duration: 0.6, ease: EASE, delay: i * 0.08 }}
               className={`relative rounded-2xl border p-8 ${
                 t.highlight
-                  ? "border-ember/50 bg-card card-shadow-strong"
-                  : "border-line bg-card card-shadow"
+                  ? "border-border-glow/50 bg-bg-card card-shadow-strong"
+                  : "border-border bg-bg-card card-shadow"
               }`}
             >
               {t.highlight && (
-                <div className="absolute -top-3 left-8 rounded-full bg-ember px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-white">
+                <div className="absolute -top-3 left-8 rounded-full bg-border-glow px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-white">
                   Most people pick this
                 </div>
               )}
-              <div className="font-display text-xl font-semibold text-ink">{t.name}</div>
-              <div className="mt-1 text-sm text-muted">{t.description}</div>
+              <div className="font-display text-xl font-semibold text-text-primary">{t.name}</div>
+              <div className="mt-1 text-sm text-text-muted">{t.description}</div>
               <div className="mt-6 flex items-baseline gap-2">
-                <span className="font-display text-5xl font-bold text-ink">{t.price}</span>
-                <span className="text-sm text-muted">{t.cadence}</span>
+                <span className="font-display text-5xl font-bold text-text-primary">{t.price}</span>
+                <span className="text-sm text-text-muted">{t.cadence}</span>
               </div>
               <ul className="mt-7 space-y-3 text-[14px]">
                 {t.features.map((f) => (
@@ -100,7 +100,7 @@ export function PricingCards({ compact = false }: { compact?: boolean }) {
                     >
                       <path d="M5 13l4 4L19 7" />
                     </svg>
-                    <span className="text-ink-soft">{f}</span>
+                    <span className="text-text-secondary">{f}</span>
                   </li>
                 ))}
               </ul>
@@ -119,7 +119,7 @@ export function PricingCards({ compact = false }: { compact?: boolean }) {
           ))}
         </div>
 
-        <div className="mt-6 text-center text-xs text-muted">
+        <div className="mt-6 text-center text-xs text-text-muted">
           Example: a typical shopping task with Claude Sonnet ≈ 4¢ · a flight search ≈ 7¢
         </div>
       </div>

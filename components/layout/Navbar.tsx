@@ -27,7 +27,7 @@ export function Navbar() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-        scrolled ? "backdrop-blur-md bg-paper/75 border-b border-line" : "bg-transparent"
+        scrolled ? "backdrop-blur-md bg-bg/75 border-b border-border" : "bg-transparent"
       }`}
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5">
@@ -38,7 +38,7 @@ export function Navbar() {
         <ul className="hidden items-center gap-7 md:flex">
           {navLinks.map((l) => (
             <li key={l.href}>
-              <a href={l.href} className="text-[14px] text-ink-soft transition-colors hover:text-ink">
+              <a href={l.href} className="text-[14px] text-text-secondary transition-colors hover:text-text-primary">
                 {l.label}
               </a>
             </li>

@@ -40,26 +40,26 @@ export default async function DashboardPage({
     <div className="space-y-8">
       <header className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
         <div>
-          <div className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
+          <div className="text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">
             Dashboard
           </div>
-          <h1 className="mt-1 font-display text-3xl font-bold tracking-tight text-ink md:text-4xl">
+          <h1 className="mt-1 font-display text-3xl font-bold tracking-tight text-text-primary md:text-4xl">
             Welcome, {firstName}.
           </h1>
-          <p className="mt-2 text-sm text-ink-soft">
+          <p className="mt-2 text-sm text-text-secondary">
             Top up credits, pick your model, pair the extension.
           </p>
         </div>
-        <div className="text-xs text-muted">{user.email}</div>
+        <div className="text-xs text-text-muted">{user.email}</div>
       </header>
 
       {topupSuccess && (
-        <div className="rounded-xl border border-mint/40 bg-mint/10 p-4 text-sm text-ink">
+        <div className="rounded-xl border border-success/40 bg-success/10 p-4 text-sm text-text-primary">
           ✓ Top-up complete. Your credits are live.
         </div>
       )}
       {topupCanceled && (
-        <div className="rounded-xl border border-line bg-paper-soft p-4 text-sm text-ink-soft">
+        <div className="rounded-xl border border-border bg-bg-elevated p-4 text-sm text-text-secondary">
           Top-up canceled. You can start one any time.
         </div>
       )}
